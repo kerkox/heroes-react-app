@@ -10,6 +10,7 @@ export const AppRouter = () => {
         <Switch>
           <Route exact path="/login" component={LoginScreen}/>
           <Route path="/" component={DashboardRoutes}/>
+          <Route path="" component={DashboardRoutes}/>
         </Switch>
       </div>
     </Router>
