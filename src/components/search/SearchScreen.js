@@ -1,17 +1,23 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import queryString from 'query-string'
+import { useLocation } from "react-router-dom";
 import { heroes } from "../../data/heroes";
 import { useForm } from "../../hooks/useForm";
 import { HeroCard } from "../heroes/HeroCard";
+import { getHeroByName } from "../../selectors/getHeroesByName";
 
-export const SearchScreen = () => {
-  const [heroesFiltered, setHeroesFiltered] = useState(heroes);
+export const SearchScreen = ({history}) => {
+  const location = useLocation();
+  const { q = '' } = queryString.parse(location.search)
 
-  const [{ searchText }, handleInputChange, reset] = useForm({ searchText: "" });
+  
+  const [{ searchText }, handleInputChange] = useForm({ searchText: q });
   const handleSearch = (e) => {
     e.preventDefault();
     history.push(`?q=${searchText}`)
   };
-
+  const heroesFiltered = useMemo(() => getHeroByName(q), [q]);
+  
   return (
     <div>
       <h1>Search SCreen</h1>
@@ -24,7 +30,7 @@ export const SearchScreen = () => {
             <input
               type="text"
               placeholder="Find your hero"
-              name="search"
+              name="searchText"
               value={searchText}
               autoComplete="off"
               onChange={handleInputChange}
@@ -42,9 +48,26 @@ export const SearchScreen = () => {
         <div className="col-7">
           <h4>Result</h4>
           <hr />
-          {heroesFiltered.map((hero) => (
-            <HeroCard key={hero.id} {...hero} />
-          ))}
+          {
+            (q === '') 
+            &&
+            <div className="alert alert-info">
+              Search a hero
+            </div>
+          }
+          {
+            (q !== '' && heroesFiltered.length === 0) 
+            &&
+            <div className="alert alert-danger">
+              There is no a hero with { q }
+            </div>
+          }
+
+          {
+            heroesFiltered.map((hero) => (
+              <HeroCard key={hero.id} {...hero} />
+            ))
+          }
         </div>
       </div>
     </div>
