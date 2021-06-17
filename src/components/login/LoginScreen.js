@@ -7,6 +7,7 @@ export const LoginScreen = ({ history }) => {
   const { dispatch} = useContext(AuthContext)
 
   const handleLogin = () => {
+    const lastPath = localStorage.getItem('lastPath') || '/';
     const payload = {
       name:'Paul',
       logged:true
@@ -15,7 +16,7 @@ export const LoginScreen = ({ history }) => {
       type: types.login,
       payload
     });
-    history.push('/')
+    history.push(lastPath)
   }
   return (
     <div className="container  mt-5">
