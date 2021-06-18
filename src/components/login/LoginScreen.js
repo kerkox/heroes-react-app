@@ -16,7 +16,7 @@ export const LoginScreen = ({ history }) => {
       type: types.login,
       payload
     });
-    history.push(lastPath)
+    history.replace(lastPath)
   }
   return (
     <div className="container  mt-5">
